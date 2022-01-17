@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("/check")
     public String checkAccount(){
-        return "Working user on port " + environment.getProperty("local.server.port");
+        return "Working user on port " + environment.getProperty("local.server.port") + " with toker " + environment.getProperty("token.secret");
     }
 
     /*consumes = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_VALUE},

@@ -11,10 +11,12 @@
         <module name="DiscoveryService" />
         <module name="UserService" />
         <module name="ApiGateway" />
+        <module name="APIConfigServer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AccountManagementService" target="11" />
+      <module name="APIConfigServer" target="11" />
       <module name="ApiGateway" target="11" />
       <module name="DiscoveryService" target="11" />
       <module name="UserService" target="11" />
@@ -22,6 +24,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="APIConfigServer" options="-parameters" />
       <module name="AccountManagementService" options="-parameters" />
       <module name="ApiGateway" options="-parameters" />
       <module name="DiscoveryService" options="-parameters" />

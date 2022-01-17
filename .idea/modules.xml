@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/APIConfigServer/APIConfigServer.iml" filepath="$PROJECT_DIR$/APIConfigServer/APIConfigServer.iml" />
       <module fileurl="file://$PROJECT_DIR$/AccountManagementService/AccountManagementService.iml" filepath="$PROJECT_DIR$/AccountManagementService/AccountManagementService.iml" />
       <module fileurl="file://$PROJECT_DIR$/ApiGateway/ApiGateway.iml" filepath="$PROJECT_DIR$/ApiGateway/ApiGateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Cloud.iml" filepath="$PROJECT_DIR$/.idea/Cloud.iml" />
