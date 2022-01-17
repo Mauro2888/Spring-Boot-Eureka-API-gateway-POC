@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,10 +20,13 @@ import javax.servlet.Filter;
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    @Value("${gateway.ip}")
-    private String gatewayIp;
     private UsersService usersService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private Environment environment;
+
+    @Value("${login.url.path}")
+    private String urlPath;
 
     @Autowired
     public WebSecurity(UsersService usersService, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -32,11 +36,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        // disable caching
+        http.headers().cacheControl();
+        http.csrf().disable(); // disable csrf for our requests.
+        //HTTP REQUEST REGISTRATION
         http.authorizeRequests()
-                .antMatchers("/users").permitAll()
-                .antMatchers("/users/login").permitAll()
-                .antMatchers("/**").hasIpAddress(gatewayIp)
+                .antMatchers("/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/login").permitAll()
                 .and()
                 .addFilter(getAuthenticationFilter());
         http.headers().frameOptions().disable();
@@ -44,15 +50,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     }
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
-        authenticationFilter.setAuthenticationManager(authenticationManager());
-        //authenticationFilter.setFilterProcessesUrl("/users/login");
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter(usersService,environment,authenticationManager());
+        //authenticationFilter.setAuthenticationManager(authenticationManager());
+        //SET CUSTOM URL FOR LOGIN
+        authenticationFilter.setFilterProcessesUrl(urlPath);
         return authenticationFilter;
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        super.configure(auth);
         auth.userDetailsService(userDetailsService()).passwordEncoder(bCryptPasswordEncoder);
     }
-
 }
